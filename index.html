@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     
-    <title>On Fire Padel - Score App Ultra</title>
+    <title>On Fire Padel - Score App v1.3.0</title>
     <style>
         :root {
             --primary: #ff4500; 
@@ -56,7 +56,6 @@
             letter-spacing: 2px;
         }
 
-        /* BOTÓN FULLSCREEN TOP DESTACADO */
         .btn-fullscreen-top {
             background-color: #ff4500;
             color: white;
@@ -188,7 +187,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             background: rgba(22, 22, 26, 0.4);
             padding: 12px 8px;
             border-radius: 14px;
@@ -205,10 +204,18 @@
             color: var(--muted);
             text-align: center;
             line-height: 1.2;
+            padding: 4px 6px;
+            border-radius: 6px;
+            width: 90%;
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
         }
 
-        .serving-active .team-name-title {
-            color: #fff;
+        /* Resaltado Pro Individual para el Jugador que saca */
+        .team-name-title.individual-server {
+            color: #fff !important;
+            background-color: rgba(255, 69, 0, 0.25);
+            border: 1px dashed var(--primary);
         }
 
         .ball-icon-label {
@@ -337,7 +344,6 @@
 
     <header>
         <h1>Score Padel</h1>
-        <!-- BOTÓN UBICADO EN ZONA SEGURA SUPERIOR -->
         <button class="btn-fullscreen-top" onclick="toggleFullscreen()">📺 PANTALLA COMPLETA</button>
     </header>
 
@@ -380,10 +386,10 @@
         <div class="layout-container">
             
             <!-- Pareja A -->
-            <div class="lateral-team-info serving-active" id="lateral-A" onclick="switchServer('A')">
+            <div class="lateral-team-info serving-active" id="lateral-A">
                 <div class="ball-icon-label">🎾 SAQUE</div>
-                <div class="team-name-title" id="lbl-A1">Marco</div>
-                <div class="team-name-title" id="lbl-A2" style="font-size:0.75rem; opacity:0.6;">Matias</div>
+                <div class="team-name-title" id="lbl-A1" onclick="setManualServer('A', 1)">Marco</div>
+                <div class="team-name-title" id="lbl-A2" onclick="setManualServer('A', 2)">Matias</div>
             </div>
 
             <!-- Marcadores centro -->
@@ -402,15 +408,15 @@
             </div>
 
             <!-- Pareja B -->
-            <div class="lateral-team-info" id="lateral-B" onclick="switchServer('B')">
+            <div class="lateral-team-info" id="lateral-B">
                 <div class="ball-icon-label">🎾 SAQUE</div>
-                <div class="team-name-title" id="lbl-B1">Riaño</div>
-                <div class="team-name-title" id="lbl-B2" style="font-size:0.75rem; opacity:0.6;">Samuel</div>
+                <div class="team-name-title" id="lbl-B1" onclick="setManualServer('B', 1)">Riaño</div>
+                <div class="team-name-title" id="lbl-B2" onclick="setManualServer('B', 2)">Samuel</div>
             </div>
 
         </div>
 
-        <!-- Controles Inferiores Limpios -->
+        <!-- Controles Inferiores -->
         <div class="controls">
             <button class="btn" onclick="undo()">↩ Deshacer</button>
             <button class="btn" onclick="editPlayers()">✏️ Nombres</button>
@@ -432,6 +438,10 @@
         let historyStack = [];
         let isTieBreak = false;
 
+        // Variables de rastreo individual de servidores (1 o 2 para indicar qué jugador saca)
+        let serverIdxA = 1; 
+        let serverIdxB = 1;
+
         let pA1_name = "Marco", pA2_name = "Matias", pB1_name = "Riaño", pB2_name = "Samuel";
         const pointsMap = { 0: "0", 1: "15", 2: "30", 3: "40" };
 
@@ -446,7 +456,6 @@
                 if (doc.requestFullscreen) doc.requestFullscreen();
                 else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
                 else if (doc.msRequestFullscreen) doc.msRequestFullscreen();
-                
                 window.scrollTo(0, 1);
             } else {
                 if (document.exitFullscreen) document.exitFullscreen();
@@ -473,13 +482,16 @@
 
         function saveState() {
             historyStack.push(JSON.stringify({
-                pointsA, pointsB, gamesA, gamesB, setsA, setsB, setHistory, advantage, currentServer, isTieBreak
+                pointsA, pointsB, gamesA, gamesB, setsA, setsB, setHistory, advantage, currentServer, isTieBreak, serverIdxA, serverIdxB
             }));
         }
 
-        function switchServer(team) {
+        // Permite cambiar manualmente quién saca tocando el nombre del jugador
+        function setManualServer(team, playerIdx) {
             saveState();
             currentServer = team;
+            if (team === 'A') serverIdxA = playerIdx;
+            else serverIdxB = playerIdx;
             updateUI();
         }
 
@@ -489,7 +501,7 @@
             if (isTieBreak) {
                 if (team === 'A') pointsA++; else pointsB++;
                 let totalPoints = pointsA + pointsB;
-                if (totalPoints % 2 === 1) currentServer = currentServer === 'A' ? 'B' : 'A';
+                if (totalPoints % 2 === 1) rotateServerNormal();
 
                 if (pointsA >= 7 && pointsA - pointsB >= 2) winSet('A');
                 else if (pointsB >= 7 && pointsB - pointsA >= 2) winSet('B');
@@ -533,7 +545,24 @@
             }
 
             if (!isTieBreak && (gamesA + gamesB) % 2 === 1) triggerAlert("¡Cambio de lado!");
-            if (!isTieBreak) currentServer = currentServer === 'A' ? 'B' : 'A';
+            
+            // Rotar el saque al cambiar de juego de forma automática
+            if (!isTieBreak) {
+                rotateServerNormal();
+            }
+        }
+
+        // Lógica de rotación tradicional por juegos: cambia de bando, y rota el interno del bando al que va
+        function rotateServerNormal() {
+            if (currentServer === 'A') {
+                currentServer = 'B';
+                // Alternamos el jugador del equipo B que sacará en su próximo turno
+                serverIdxB = serverIdxB === 1 ? 2 : 1;
+            } else {
+                currentServer = 'A';
+                // Alternamos el jugador del equipo A que sacará en su próximo turno
+                serverIdxA = serverIdxA === 1 ? 2 : 1;
+            }
         }
 
         function winSet(team) {
@@ -557,6 +586,7 @@
                 setsA = prev.setsA; setsB = prev.setsB;
                 setHistory = prev.setHistory; advantage = prev.advantage;
                 currentServer = prev.currentServer; isTieBreak = prev.isTieBreak;
+                serverIdxA = prev.serverIdxA; serverIdxB = prev.serverIdxB;
                 updateUI();
             }
         }
@@ -565,6 +595,7 @@
             if(confirm("¿Reiniciar el partido entero?")) {
                 pointsA = 0; pointsB = 0; gamesA = 0; gamesB = 0; setsA = 0; setsB = 0;
                 setHistory = []; advantage = null; historyStack = []; currentServer = 'A'; isTieBreak = false;
+                serverIdxA = 1; serverIdxB = 1;
                 updateUI();
             }
         }
@@ -614,17 +645,27 @@
                 document.getElementById('sets-history').innerText = historyText;
             }
 
+            // Remover estados de saque previos
             document.getElementById('box-A').classList.remove('serving');
             document.getElementById('box-B').classList.remove('serving');
             document.getElementById('lateral-A').classList.remove('serving-active');
             document.getElementById('lateral-B').classList.remove('serving-active');
+            document.getElementById('lbl-A1').classList.remove('individual-server');
+            document.getElementById('lbl-A2').classList.remove('individual-server');
+            document.getElementById('lbl-B1').classList.remove('individual-server');
+            document.getElementById('lbl-B2').classList.remove('individual-server');
             
+            // Encender luces del equipo y del jugador específico que saca
             if (currentServer === 'A') {
                 document.getElementById('box-A').classList.add('serving');
                 document.getElementById('lateral-A').classList.add('serving-active');
+                if (serverIdxA === 1) document.getElementById('lbl-A1').classList.add('individual-server');
+                else document.getElementById('lbl-A2').classList.add('individual-server');
             } else {
                 document.getElementById('box-B').classList.add('serving');
                 document.getElementById('lateral-B').classList.add('serving-active');
+                if (serverIdxB === 1) document.getElementById('lbl-B1').classList.add('individual-server');
+                else document.getElementById('lbl-B2').classList.add('individual-server');
             }
         }
     </script>
