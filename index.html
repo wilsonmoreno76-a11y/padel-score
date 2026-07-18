@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>On Fire Padel - Score App Pro</title>
+    
+    <!-- Etiquetas para simular App nativa en pantalla completa -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>On Fire Padel - Score App Ultra</title>
     <style>
         :root {
             --primary: #ff4500; /* Naranja On Fire */
             --dark: #0f0f11;
-            --card: #18181c;
+            --card: #16161a;
             --card-active: #22222a;
             --text: #ffffff;
             --muted: #8e8e93;
             --input-bg: #24242b;
-            --neon-glow: 0 0 15px rgba(255, 69, 0, 0.6);
+            --neon-glow: 0 0 20px rgba(255, 69, 0, 0.7);
         }
 
         body {
@@ -21,10 +27,11 @@
             background-color: var(--dark);
             color: var(--text);
             margin: 0;
-            padding: 12px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
             box-sizing: border-box;
             overflow: hidden;
@@ -32,18 +39,17 @@
 
         header {
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             width: 100%;
         }
 
         h1 {
             color: var(--primary);
             margin: 0;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .panel {
@@ -117,7 +123,6 @@
             color: var(--primary);
             font-weight: 700;
             margin-bottom: 8px;
-            letter-spacing: 1px;
         }
 
         .input-group {
@@ -133,44 +138,100 @@
             padding: 10px;
             border-radius: 8px;
             font-size: 0.95rem;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--primary);
-            outline: none;
         }
 
         .sets-display {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--muted);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: 600;
-            background: #18181c;
-            padding: 6px 16px;
+            background: #16161a;
+            padding: 4px 16px;
             border-radius: 20px;
             border: 1px solid #222;
         }
 
+        /* DISEÑO DE CONTENEDOR EN HORIZONTAL */
+        .layout-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+            flex: 1;
+            padding: 5px 0;
+        }
+
+        /* Nombres en los laterales */
+        .lateral-team-info {
+            width: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: rgba(22, 22, 26, 0.4);
+            padding: 15px 10px;
+            border-radius: 14px;
+            border: 1px solid #1f1f24;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .lateral-team-info.serving-active {
+            border-color: var(--primary);
+        }
+
+        .team-name-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .serving-active .team-name-title {
+            color: #fff;
+        }
+
+        .ball-icon-label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            opacity: 0.2;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .serving-active .ball-icon-label {
+            color: var(--primary);
+            opacity: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Los Marcadores del Centro */
         .score-container {
             display: flex;
-            gap: 12px;
-            width: 100%;
-            max-width: 500px;
+            gap: 15px;
             flex: 1;
-            margin-bottom: 12px;
+            max-width: 500px;
+            height: 100%;
+            max-height: 240px; /* Evita que queden demasiado altos */
+            align-items: center;
         }
 
         .team-box {
             flex: 1;
+            height: 100%;
             background-color: var(--card);
-            border-radius: 20px;
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 16px 10px;
-            border: 2px solid #222;
+            border: 3px solid #222;
             cursor: pointer;
             transition: transform 0.05s, border-color 0.2s, box-shadow 0.2s;
             position: relative;
@@ -179,59 +240,24 @@
         }
 
         .team-box:active {
-            transform: scale(0.97);
+            transform: scale(0.96);
             background-color: var(--card-active);
         }
 
-        /* Resaltado Pro de Saque */
         .team-box.serving {
             border-color: var(--primary);
             box-shadow: var(--neon-glow);
         }
 
-        .team-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            gap: 4px;
-        }
-
-        .ball-icon {
-            font-size: 1.2rem;
-            opacity: 0.3;
-            transition: opacity 0.2s;
-        }
-
-        .serving .ball-icon {
-            opacity: 1;
-        }
-
-        .team-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--muted);
-            text-align: center;
-            max-width: 90%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .serving .team-name {
-            color: #fff;
-            font-weight: 700;
-        }
-
         .games-badge {
             background: #25252b;
             color: #fff;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-top: 4px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 800;
             border: 1px solid #333;
+            margin-bottom: 10px;
         }
         
         .serving .games-badge {
@@ -240,72 +266,70 @@
         }
 
         .team-score {
-            font-size: 5rem;
+            font-size: 6.5rem; /* ¡Mucho más grande! */
             font-weight: 900;
             color: #fff;
-            margin: auto 0;
-            line-height: 1;
+            line-height: 0.9;
         }
 
         .team-footer {
             font-size: 0.8rem;
             color: var(--muted);
+            margin-top: 8px;
             background: rgba(0,0,0,0.2);
-            padding: 2px 10px;
-            border-radius: 8px;
+            padding: 1px 8px;
+            border-radius: 6px;
         }
 
+        /* Controles Inferiores */
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
-            max-width: 500px;
-            margin-bottom: 5px;
+            max-width: 650px;
+            margin-top: 5px;
         }
 
         .btn {
             flex: 1;
-            background-color: #1c1c22;
+            background-color: #16161a;
             color: #fff;
             border: 1px solid #333;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 0.95rem;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .btn:active { background-color: #2c2c35; }
         .btn-primary { background-color: var(--primary); border: none; font-weight: 700;}
-        .btn-primary:active { background-color: #d43d00; }
         .btn-reset { color: #ff3b30; }
-        .btn-reset:active { background-color: rgba(255, 59, 48, 0.1); }
 
         /* Banner de Aviso flotante */
         .alert-banner {
             position: fixed;
-            top: 20px;
+            top: 15px;
             background: var(--primary);
             color: white;
-            padding: 10px 20px;
+            padding: 8px 20px;
             border-radius: 30px;
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 100;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
 
         .hidden { display: none !important; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
     </style>
 </head>
 <body>
@@ -314,7 +338,7 @@
         <h1>Score Padel</h1>
     </header>
 
-    <!-- PANTALLA CONFIGURACIÓN -->
+    <!-- CONFIGURACIÓN -->
     <div id="setup-screen" class="panel">
         <div class="toggle-container">
             <div>
@@ -346,42 +370,53 @@
         </div>
     </div>
 
-    <!-- PANTALLA MARCADOR PRO -->
-    <div id="game-screen" class="hidden" style="width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; flex: 1;">
+    <!-- TABLERO DE JUEGO ULTRA LIMPIO -->
+    <div id="game-screen" class="hidden" style="width: 100%; display: flex; flex-direction: column; align-items: center; flex: 1;">
         <div class="sets-display" id="sets-history">Set Actual: 0-0</div>
 
-        <div class="score-container">
-            <div class="team-box serving" id="box-A" onclick="scorePoint('A')">
-                <div class="team-header">
-                    <div class="ball-icon" onclick="event.stopPropagation(); switchServer('A')">🎾 Saque</div>
-                    <div class="team-name" id="name-A1">Jugador 1</div>
-                    <div class="team-name" id="name-A2" style="font-size:0.85rem; opacity:0.7;">& Jugador 2</div>
-                    <div class="games-badge" id="games-A">0</div>
-                </div>
-                <div class="team-score" id="score-A">0</div>
-                <div class="team-footer">Sets: <span id="sets-A">0</span></div>
+        <!-- CONTENEDOR DE FILA (Nombres lados | Marcadores centro) -->
+        <div class="layout-container">
+            
+            <!-- Lateral Izquierdo: Pareja A -->
+            <div class="lateral-team-info serving-active" id="lateral-A">
+                <div class="ball-icon-label" onclick="switchServer('A')">🎾 SAQUE</div>
+                <div class="team-name-title" id="lbl-A1">Jugador 1</div>
+                <div class="team-name-title" id="lbl-A2" style="font-size:0.8rem; opacity:0.6;">Jugador 2</div>
             </div>
 
-            <div class="team-box" id="box-B" onclick="scorePoint('B')">
-                <div class="team-header">
-                    <div class="ball-icon" onclick="event.stopPropagation(); switchServer('B')">🎾 Saque</div>
-                    <div class="team-name" id="name-B1">Jugador 3</div>
-                    <div class="team-name" id="name-B2" style="font-size:0.85rem; opacity:0.7;">& Jugador 4</div>
-                    <div class="games-badge" id="games-B">0</div>
+            <!-- Centro: Marcadores táctiles gigantes -->
+            <div class="score-container">
+                <div class="team-box serving" id="box-A" onclick="scorePoint('A')">
+                    <div class="games-badge" id="games-A">0</div>
+                    <div class="team-score" id="score-A">0</div>
+                    <div class="team-footer">Sets: <span id="sets-A">0</span></div>
                 </div>
-                <div class="team-score" id="score-B">0</div>
-                <div class="team-footer">Sets: <span id="sets-B">0</span></div>
+
+                <div class="team-box" id="box-B" onclick="scorePoint('B')">
+                    <div class="games-badge" id="games-B">0</div>
+                    <div class="team-score" id="score-B">0</div>
+                    <div class="team-footer">Sets: <span id="sets-B">0</span></div>
+                </div>
             </div>
+
+            <!-- Lateral Derecho: Pareja B -->
+            <div class="lateral-team-info" id="lateral-B">
+                <div class="ball-icon-label" onclick="switchServer('B')">🎾 SAQUE</div>
+                <div class="team-name-title" id="lbl-B1">Jugador 3</div>
+                <div class="team-name-title" id="lbl-B2" style="font-size:0.8rem; opacity:0.6;">Jugador 4</div>
+            </div>
+
         </div>
 
+        <!-- Controles de Navegación -->
         <div class="controls">
             <button class="btn" onclick="undo()">↩ Deshacer</button>
+            <button class="btn" onclick="toggleFullscreen()">📺 Pantalla Completa</button>
             <button class="btn" onclick="editPlayers()">✏️ Nombres</button>
             <button class="btn btn-reset" onclick="resetMatch()">🔄 Reiniciar</button>
         </div>
     </div>
 
-    <!-- Banner Flotante Alertas -->
     <div id="alert-box" class="alert-banner hidden">¡Cambio de lado!</div>
 
     <script>
@@ -402,6 +437,16 @@
         function toggleRuleMode() {
             isGoldenPoint = document.getElementById('rule-mode').checked;
             document.getElementById('mode-text').innerText = isGoldenPoint ? "Punto de Oro Activo" : "Ventaja Normal Activa";
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`No se pudo activar pantalla completa: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
         }
 
         function startGame() {
@@ -437,23 +482,15 @@
             saveState();
             
             if (isTieBreak) {
-                // LÓGICA DE TIE-BREAK (1 en 1)
                 if (team === 'A') pointsA++; else pointsB++;
-                
-                // Cambio de saque en Tie-Break (Cada 2 puntos totales cambia el servicio)
                 let totalPoints = pointsA + pointsB;
-                if (totalPoints % 2 === 1) {
-                    currentServer = currentServer === 'A' ? 'B' : 'A';
-                }
+                if (totalPoints % 2 === 1) currentServer = currentServer === 'A' ? 'B' : 'A';
 
                 if (pointsA >= 7 && pointsA - pointsB >= 2) winSet('A');
                 else if (pointsB >= 7 && pointsB - pointsA >= 2) winSet('B');
-                
-                // Alerta cambio de cancha en tiebreak cada 6 puntos
                 if (totalPoints % 6 === 0) triggerAlert("¡Cambio de lado!");
                 
             } else {
-                // LÓGICA NORMAL
                 if (isGoldenPoint) {
                     if (pointsA === 3 && pointsB === 3) {
                         team === 'A' ? winGame('A') : winGame('B');
@@ -464,13 +501,9 @@
                     }
                 } else {
                     if (pointsA === 3 && pointsB === 3) {
-                        if (!advantage) {
-                            advantage = team;
-                        } else if (advantage === team) {
-                            winGame(team);
-                        } else {
-                            advantage = null; 
-                        }
+                        if (!advantage) advantage = team;
+                        else if (advantage === team) winGame(team);
+                        else advantage = null; 
                     } else {
                         if (team === 'A') pointsA++; else pointsB++;
                         if (pointsA > 3 && pointsB < 3) winGame('A');
@@ -486,38 +519,29 @@
             pointsA = 0; pointsB = 0; advantage = null;
             if (team === 'A') gamesA++; else gamesB++;
             
-            // Verificar si van al Tie-Break (6-6)
             if (gamesA === 6 && gamesB === 6) {
                 isTieBreak = true;
                 triggerAlert("¡TIE-BREAK!");
             } else {
-                // Lógica común de fin de Set
                 if (gamesA >= 6 && gamesA - gamesB >= 2) winSet('A');
                 else if (gamesB >= 6 && gamesB - gamesA >= 2) winSet('B');
             }
 
-            // Alerta de cambio de lado tradicional (Suma de juegos impar)
-            if (!isTieBreak && (gamesA + gamesB) % 2 === 1) {
-                triggerAlert("¡Cambio de lado!");
-            }
-            
-            // Alternar el saque al cambiar de juego
+            if (!isTieBreak && (gamesA + gamesB) % 2 === 1) triggerAlert("¡Cambio de lado!");
             if (!isTieBreak) currentServer = currentServer === 'A' ? 'B' : 'A';
         }
 
         function winSet(team) {
             if (team === 'A') setsA++; else setsB++;
             setHistory.push(`${gamesA}-${gamesB}`);
-            gamesA = 0; gamesB = 0;
-            pointsA = 0; pointsB = 0;
-            isTieBreak = false;
+            gamesA = 0; gamesB = 0; pointsA = 0; pointsB = 0; isTieBreak = false;
         }
 
         function triggerAlert(msg) {
             const banner = document.getElementById('alert-box');
             banner.innerText = msg;
             banner.classList.remove('hidden');
-            setTimeout(() => banner.classList.add('hidden'), 2500);
+            setTimeout(() => banner.classList.add('hidden'), 2200);
         }
 
         function undo() {
@@ -533,7 +557,7 @@
         }
 
         function resetMatch() {
-            if(confirm("¿Reiniciar el partido por completo?")) {
+            if(confirm("¿Reiniciar el partido entero?")) {
                 pointsA = 0; pointsB = 0; gamesA = 0; gamesB = 0; setsA = 0; setsB = 0;
                 setHistory = []; advantage = null; historyStack = []; currentServer = 'A'; isTieBreak = false;
                 updateUI();
@@ -541,7 +565,6 @@
         }
 
         function updateUI() {
-            // Render del Score
             if (isTieBreak) {
                 document.getElementById('score-A').innerText = pointsA;
                 document.getElementById('score-B').innerText = pointsB;
@@ -558,32 +581,37 @@
                 document.getElementById('score-B').innerText = pointsMap[pointsB] || "40";
             }
 
-            // Textos Limpios
-            document.getElementById('name-A1').innerText = pA1_name;
-            document.getElementById('name-A2').innerText = `& ${pA2_name}`;
-            document.getElementById('name-B1').innerText = pB1_name;
-            document.getElementById('name-B2').innerText = `& ${pB2_name}`;
+            // Nombres en las cajas laterales
+            document.getElementById('lbl-A1').innerText = pA1_name;
+            document.getElementById('lbl-A2').innerText = `& ${pA2_name}`;
+            document.getElementById('lbl-B1').innerText = pB1_name;
+            document.getElementById('lbl-B2').innerText = `& ${pB2_name}`;
 
-            // Juegos del Set
-            document.getElementById('games-A').innerText = gamesA;
-            document.getElementById('games-B').innerText = gamesB;
-
-            // Historial de Sets
+            document.getElementById('games-A').innerText = `Juegos: ${gamesA}`;
+            document.getElementById('games-B').innerText = `Juegos: ${gamesB}`;
             document.getElementById('sets-A').innerText = setsA;
             document.getElementById('sets-B').innerText = setsB;
 
             let historyText = isTieBreak ? "Set Actual: TIE-BREAK" : `Set Actual: ${gamesA}-${gamesB}`;
             if (setHistory.length > 0) {
-                document.getElementById('sets-history').innerText = `Sets anteriores: ${setHistory.join(' / ')} | ${historyText}`;
+                document.getElementById('sets-history').innerText = `Sets: ${setHistory.join(' / ')} | ${historyText}`;
             } else {
                 document.getElementById('sets-history').innerText = historyText;
             }
 
-            // Iluminación Neon de Saque
+            // Clases de Servicio para Neon en los Marcadores
             document.getElementById('box-A').classList.remove('serving');
             document.getElementById('box-B').classList.remove('serving');
-            if (currentServer === 'A') document.getElementById('box-A').classList.add('serving');
-            else document.getElementById('box-B').classList.add('serving');
+            document.getElementById('lateral-A').classList.remove('serving-active');
+            document.getElementById('lateral-B').classList.remove('serving-active');
+            
+            if (currentServer === 'A') {
+                document.getElementById('box-A').classList.add('serving');
+                document.getElementById('lateral-A').classList.add('serving-active');
+            } else {
+                document.getElementById('box-B').classList.add('serving');
+                document.getElementById('lateral-B').classList.add('serving-active');
+            }
         }
     </script>
 </body>
