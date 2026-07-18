@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- Etiquetas para simular App nativa en pantalla completa -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,7 +11,7 @@
     <title>On Fire Padel - Score App Ultra</title>
     <style>
         :root {
-            --primary: #ff4500; /* Naranja On Fire */
+            --primary: #ff4500; 
             --dark: #0f0f11;
             --card: #16161a;
             --card-active: #22222a;
@@ -27,7 +26,7 @@
             background-color: var(--dark);
             color: var(--text);
             margin: 0;
-            padding: 10px;
+            padding: 5px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -38,23 +37,45 @@
         }
 
         header {
-            text-align: center;
-            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             width: 100%;
+            max-width: 850px;
+            margin-bottom: 3px;
+            padding: 0 10px;
+            box-sizing: border-box;
         }
 
         h1 {
             color: var(--primary);
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
+        /* BOTÓN FULLSCREEN TOP DESTACADO */
+        .btn-fullscreen-top {
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            animation: pulse 2s infinite;
+        }
+
         .panel {
             background-color: var(--card);
-            padding: 20px;
+            padding: 15px;
             border-radius: 16px;
             width: 100%;
             max-width: 450px;
@@ -67,9 +88,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             background: rgba(0,0,0,0.2);
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-radius: 10px;
         }
 
@@ -107,22 +128,22 @@
         .players-setup {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
         }
 
         .team-inputs {
             background: rgba(255,255,255,0.02);
-            padding: 12px;
+            padding: 10px;
             border-radius: 12px;
             border: 1px solid #222;
         }
 
         .team-inputs label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--primary);
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .input-group {
@@ -135,47 +156,43 @@
             background-color: var(--input-bg);
             border: 1px solid #333;
             color: #fff;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .sets-display {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--muted);
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: 600;
             background: #16161a;
-            padding: 4px 16px;
+            padding: 3px 14px;
             border-radius: 20px;
             border: 1px solid #222;
         }
 
-        /* DISEÑO DE CONTENEDOR EN HORIZONTAL */
         .layout-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             width: 100%;
-            max-width: 900px;
+            max-width: 850px;
             flex: 1;
-            padding: 5px 0;
         }
 
-        /* Nombres en los laterales */
         .lateral-team-info {
-            width: 140px;
+            width: 130px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 4px;
             background: rgba(22, 22, 26, 0.4);
-            padding: 15px 10px;
+            padding: 12px 8px;
             border-radius: 14px;
             border: 1px solid #1f1f24;
-            transition: color 0.2s, border-color 0.2s;
         }
 
         .lateral-team-info.serving-active {
@@ -183,11 +200,11 @@
         }
 
         .team-name-title {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--muted);
             text-align: center;
-            line-height: 1.3;
+            line-height: 1.2;
         }
 
         .serving-active .team-name-title {
@@ -195,30 +212,24 @@
         }
 
         .ball-icon-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--muted);
             opacity: 0.2;
-            display: flex;
-            align-items: center;
-            gap: 4px;
             font-weight: bold;
-            cursor: pointer;
         }
 
         .serving-active .ball-icon-label {
             color: var(--primary);
             opacity: 1;
-            animation: pulse 1.5s infinite;
         }
 
-        /* Los Marcadores del Centro */
         .score-container {
             display: flex;
             gap: 15px;
             flex: 1;
-            max-width: 500px;
-            height: 100%;
-            max-height: 240px; /* Evita que queden demasiado altos */
+            max-width: 480px;
+            height: 85%;
+            max-height: 200px;
             align-items: center;
         }
 
@@ -226,21 +237,20 @@
             flex: 1;
             height: 100%;
             background-color: var(--card);
-            border-radius: 24px;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             border: 3px solid #222;
             cursor: pointer;
-            transition: transform 0.05s, border-color 0.2s, box-shadow 0.2s;
             position: relative;
             user-select: none;
             -webkit-user-select: none;
         }
 
         .team-box:active {
-            transform: scale(0.96);
+            transform: scale(0.97);
             background-color: var(--card-active);
         }
 
@@ -252,12 +262,12 @@
         .games-badge {
             background: #25252b;
             color: #fff;
-            padding: 4px 14px;
+            padding: 3px 12px;
             border-radius: 20px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 800;
             border: 1px solid #333;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .serving .games-badge {
@@ -266,28 +276,24 @@
         }
 
         .team-score {
-            font-size: 6.5rem; /* ¡Mucho más grande! */
+            font-size: 6rem; 
             font-weight: 900;
             color: #fff;
-            line-height: 0.9;
+            line-height: 0.85;
         }
 
         .team-footer {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--muted);
-            margin-top: 8px;
-            background: rgba(0,0,0,0.2);
-            padding: 1px 8px;
-            border-radius: 6px;
+            margin-top: 5px;
         }
 
-        /* Controles Inferiores */
         .controls {
             display: flex;
             gap: 8px;
             width: 100%;
-            max-width: 650px;
-            margin-top: 5px;
+            max-width: 500px;
+            margin-top: 6px;
         }
 
         .btn {
@@ -295,22 +301,17 @@
             background-color: #16161a;
             color: #fff;
             border: 1px solid #333;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.9rem;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
         }
 
         .btn:active { background-color: #2c2c35; }
         .btn-primary { background-color: var(--primary); border: none; font-weight: 700;}
         .btn-reset { color: #ff3b30; }
 
-        /* Banner de Aviso flotante */
         .alert-banner {
             position: fixed;
             top: 15px;
@@ -326,9 +327,9 @@
         .hidden { display: none !important; }
 
         @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 69, 0, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 69, 0, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 69, 0, 0.4); }
         }
     </style>
 </head>
@@ -336,6 +337,8 @@
 
     <header>
         <h1>Score Padel</h1>
+        <!-- BOTÓN UBICADO EN ZONA SEGURA SUPERIOR -->
+        <button class="btn-fullscreen-top" onclick="toggleFullscreen()">📺 PANTALLA COMPLETA</button>
     </header>
 
     <!-- CONFIGURACIÓN -->
@@ -343,7 +346,7 @@
         <div class="toggle-container">
             <div>
                 <strong id="mode-text">Punto de Oro Activo</strong>
-                <div style="font-size: 0.75rem; color: var(--muted);">Reglas para el deuce (40-40)</div>
+                <div style="font-size: 0.7rem; color: var(--muted);">Reglas para el deuce (40-40)</div>
             </div>
             <label class="switch">
                 <input type="checkbox" id="rule-mode" checked onchange="toggleRuleMode()">
@@ -355,63 +358,61 @@
             <div class="team-inputs">
                 <label>PAREJA A</label>
                 <div class="input-group">
-                    <input type="text" id="pA1" value="Jugador 1">
-                    <input type="text" id="pA2" value="Jugador 2">
+                    <input type="text" id="pA1" value="Marco">
+                    <input type="text" id="pA2" value="Matias">
                 </div>
             </div>
             <div class="team-inputs">
                 <label>PAREJA B</label>
                 <div class="input-group">
-                    <input type="text" id="pB1" value="Jugador 3">
-                    <input type="text" id="pB2" value="Jugador 4">
+                    <input type="text" id="pB1" value="Riaño">
+                    <input type="text" id="pB2" value="Samuel">
                 </div>
             </div>
             <button class="btn btn-primary" onclick="startGame()">Iniciar Partido</button>
         </div>
     </div>
 
-    <!-- TABLERO DE JUEGO ULTRA LIMPIO -->
+    <!-- TABLERO DE JUEGO -->
     <div id="game-screen" class="hidden" style="width: 100%; display: flex; flex-direction: column; align-items: center; flex: 1;">
         <div class="sets-display" id="sets-history">Set Actual: 0-0</div>
 
-        <!-- CONTENEDOR DE FILA (Nombres lados | Marcadores centro) -->
         <div class="layout-container">
             
-            <!-- Lateral Izquierdo: Pareja A -->
-            <div class="lateral-team-info serving-active" id="lateral-A">
-                <div class="ball-icon-label" onclick="switchServer('A')">🎾 SAQUE</div>
-                <div class="team-name-title" id="lbl-A1">Jugador 1</div>
-                <div class="team-name-title" id="lbl-A2" style="font-size:0.8rem; opacity:0.6;">Jugador 2</div>
+            <!-- Pareja A -->
+            <div class="lateral-team-info serving-active" id="lateral-A" onclick="switchServer('A')">
+                <div class="ball-icon-label">🎾 SAQUE</div>
+                <div class="team-name-title" id="lbl-A1">Marco</div>
+                <div class="team-name-title" id="lbl-A2" style="font-size:0.75rem; opacity:0.6;">Matias</div>
             </div>
 
-            <!-- Centro: Marcadores táctiles gigantes -->
+            <!-- Marcadores centro -->
             <div class="score-container">
                 <div class="team-box serving" id="box-A" onclick="scorePoint('A')">
-                    <div class="games-badge" id="games-A">0</div>
+                    <div class="games-badge" id="games-A">Juegos: 0</div>
                     <div class="team-score" id="score-A">0</div>
                     <div class="team-footer">Sets: <span id="sets-A">0</span></div>
                 </div>
 
                 <div class="team-box" id="box-B" onclick="scorePoint('B')">
-                    <div class="games-badge" id="games-B">0</div>
+                    <div class="games-badge" id="games-B">Juegos: 0</div>
                     <div class="team-score" id="score-B">0</div>
                     <div class="team-footer">Sets: <span id="sets-B">0</span></div>
                 </div>
             </div>
 
-            <!-- Lateral Derecho: Pareja B -->
-            <div class="lateral-team-info" id="lateral-B">
-                <div class="ball-icon-label" onclick="switchServer('B')">🎾 SAQUE</div>
-                <div class="team-name-title" id="lbl-B1">Jugador 3</div>
-                <div class="team-name-title" id="lbl-B2" style="font-size:0.8rem; opacity:0.6;">Jugador 4</div>
+            <!-- Pareja B -->
+            <div class="lateral-team-info" id="lateral-B" onclick="switchServer('B')">
+                <div class="ball-icon-label">🎾 SAQUE</div>
+                <div class="team-name-title" id="lbl-B1">Riaño</div>
+                <div class="team-name-title" id="lbl-B2" style="font-size:0.75rem; opacity:0.6;">Samuel</div>
             </div>
 
         </div>
 
-        <!-- Controles de Navegación -->
+        <!-- Controles Inferiores Limpios -->
         <div class="controls">
             <button class="btn" onclick="undo()">↩ Deshacer</button>
-            <button class="btn" onclick="toggleFullscreen()">📺 Pantalla Completa</button>
             <button class="btn" onclick="editPlayers()">✏️ Nombres</button>
             <button class="btn btn-reset" onclick="resetMatch()">🔄 Reiniciar</button>
         </div>
@@ -431,7 +432,7 @@
         let historyStack = [];
         let isTieBreak = false;
 
-        let pA1_name = "J1", pA2_name = "J2", pB1_name = "J3", pB2_name = "J4";
+        let pA1_name = "Marco", pA2_name = "Matias", pB1_name = "Riaño", pB2_name = "Samuel";
         const pointsMap = { 0: "0", 1: "15", 2: "30", 3: "40" };
 
         function toggleRuleMode() {
@@ -440,12 +441,16 @@
         }
 
         function toggleFullscreen() {
+            const doc = document.documentElement;
             if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    alert(`No se pudo activar pantalla completa: ${err.message}`);
-                });
+                if (doc.requestFullscreen) doc.requestFullscreen();
+                else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+                else if (doc.msRequestFullscreen) doc.msRequestFullscreen();
+                
+                window.scrollTo(0, 1);
             } else {
-                document.exitFullscreen();
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
             }
         }
 
@@ -564,6 +569,17 @@
             }
         }
 
+        document.addEventListener('fullscreenchange', () => {
+            const btn = document.querySelector('.btn-fullscreen-top');
+            if (document.fullscreenElement) {
+                btn.innerHTML = "❌ SALIR FULLSCREEN";
+                btn.style.backgroundColor = "#444";
+            } else {
+                btn.innerHTML = "📺 PANTALLA COMPLETA";
+                btn.style.backgroundColor = "#ff4500";
+            }
+        });
+
         function updateUI() {
             if (isTieBreak) {
                 document.getElementById('score-A').innerText = pointsA;
@@ -581,7 +597,6 @@
                 document.getElementById('score-B').innerText = pointsMap[pointsB] || "40";
             }
 
-            // Nombres en las cajas laterales
             document.getElementById('lbl-A1').innerText = pA1_name;
             document.getElementById('lbl-A2').innerText = `& ${pA2_name}`;
             document.getElementById('lbl-B1').innerText = pB1_name;
@@ -599,7 +614,6 @@
                 document.getElementById('sets-history').innerText = historyText;
             }
 
-            // Clases de Servicio para Neon en los Marcadores
             document.getElementById('box-A').classList.remove('serving');
             document.getElementById('box-B').classList.remove('serving');
             document.getElementById('lateral-A').classList.remove('serving-active');
